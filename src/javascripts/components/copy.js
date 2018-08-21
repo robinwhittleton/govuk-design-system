@@ -7,7 +7,7 @@
   // This module is dependent on /vendor/clipboard.js
   GOVUK.copy = {
     init: function (selector) {
-      $(selector).parent().prepend('<button class="app-copy-button js-copy-button" aria-live="assertive">Copy</button>')
+      $(selector).prepend('<button class="app-copy-button js-copy-button" aria-live="assertive">Copy</button>')
       // Copy to clipboard
       try {
         new ClipboardJS('.js-copy-button', {

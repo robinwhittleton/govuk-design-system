@@ -82,7 +82,7 @@
 // Tab containers
 .app-tabs__container {
   position: relative;
-  margin-top: -2px;
+  margin-top: -1px;
   border: 1px solid $govuk-border-colour;
 }
 
@@ -114,6 +114,11 @@
 .app-tabs__container--with-close-button pre {
   padding-bottom: govuk-spacing(6);
 }
+
+.app-tabs__details{
+  margin: govuk-spacing(5)
+}
+
 
 .app-tabs__text {
   padding: govuk-spacing(4) govuk-spacing(4) govuk-spacing(4) govuk-spacing(4);

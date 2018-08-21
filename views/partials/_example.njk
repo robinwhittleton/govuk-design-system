@@ -5,6 +5,7 @@
 {% else %}
   {% set examplePath = exampleRoot + "index.njk" %}
 {% endif %}
+
 {% set exampleURL = "/" + params.group + "/" + params.item + "/" + params.example + "/index.html" %}
 {% set exampleId = params.id | default("example-" + params.example) %}
 {% set exampleTitle = getFrontmatter(examplePath).title %}
@@ -49,13 +50,71 @@
   {%- if (multipleTabs) %}
   <div class="app-tabs__heading js-tabs__heading"><a href="#{{ exampleId }}-nunjucks" role="tab" aria-controls="{{ exampleId }}-nunjucks" data-track="tab-nunjucks">Nunjucks</a></div>
   {% endif %}
+
   <div class="app-tabs__container js-tabs__container" id="{{ exampleId }}-nunjucks" role="tabpanel">
+    {%- if (params.group == 'components') %}
+
+      {% set arguments = getMacroArguments("src/components/"+params.item+"/macro-arguments.json") %}
+
+      {% set argumentsHTML %}
+
+        <p>
+          If you’re using Nunjucks macros in production be aware that using html
+          arguments, or ones ending with Html can be a <a href="https://en.wikipedia.org/wiki/Cross-site_scripting">security risk</a>.
+          Read more about it in the <a href="https://mozilla.github.io/nunjucks/api.html#user-defined-templates-warning">Nunjucks documentation</a>.</p>
+
+        <table class="govuk-table">
+          <caption class="govuk-table__caption govuk-visually-hidden">
+              Nunjucks macro arguments
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th class="govuk-table__header" scope="col">Name</th>
+              <th class="govuk-table__header" scope="col">Type</th>
+              <th class="govuk-table__header" scope="col">Description</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            {% for group in arguments %}
+
+              {% if group.groupName != "" %}
+                <tr class="govuk-table__row">
+                  <td class="govuk-table__cell" colspan="3">
+                    <h3 class="govuk-!-margin-top-5" id="nunjucks-macro-arguments-{{group.groupName}}">{{group.groupName}}</h3>
+                  </td>
+                </tr>
+              {% endif %}
+
+              {% for argument in group.arguments %}
+                <tr class="govuk-table__row">
+                  <th class="govuk-table__header" scope="row">{{argument.name}}</th>
+                  <td class="govuk-table__cell ">{{argument.type}}</td>
+                  <td class="govuk-table__cell ">{{argument.description | safe}}</td>
+                </tr>
+              {% endfor %}
+
+            {% endfor %}
+
+          </tbody>
+        </table>
+
+      {% endset %}
+
+      {% from "details/macro.njk" import govukDetails %}
+
+      {{ govukDetails({
+        summaryText: "Nunjucks macro options",
+        html: argumentsHTML,
+        classes: "app-tabs__details",
+        attributes:{
+          id: "nunjucks-macro-arguments"
+        }
+      })}}
+    {% endif %}
+
     ```js
     {{ getNunjucksCode(examplePath) | safe }}
     ```
-  {%- if (params.group == 'components') %}
-    <p class="app-tabs__text">You can configure this component using the <a href="https://github.com/alphagov/govuk-frontend/tree/master/package/components/{{frontendComponentName}}/README.md#component-arguments" class="govuk-link"  target="_blank" data-components="github-component-arguments" rel="noopener">Nunjucks macro arguments</a>.</p>
-  {% endif %}
   </div>
   {% endif %}
 </div>
